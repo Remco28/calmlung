@@ -1,0 +1,486 @@
+/* The Calm Lung — shared styles.
+   Tokens and rules come from docs/style-guide.md. When this file and that guide
+   disagree, the guide wins and this file is wrong.
+
+   Two layers, never mixed (guide §1): the claims layer says something about the
+   biology and is schematic and labelled; the atmosphere layer says nothing and so
+   cannot be wrong. Anything in here named .atmos-* belongs to the second kind and
+   must never carry meaning. */
+
+:root {
+  /* daylight surfaces and ink */
+  --paper: #fbf3ea;
+  --paper-deep: #f3e6d6;
+  --card: #fffdfa;
+  --ink: #3a2320;
+  --ink-soft: #6e5550;
+  --rule: #e4d3c2;
+
+  /* roles — a colour means the same thing everywhere (guide §2) */
+  --tissue: #c2434d;   /* 4.5:1 on --paper; #c8454f was 4.3:1 */
+  --tissue-soft: #f2c9c6;
+  --immune: #007e74;   /* 4.5:1 on --paper; #008f84 was 3.6:1 */
+  --immune-soft: #bfe6df;
+  --virus: #d9962b;
+  --worm: #b89a63;
+  --molecule: #6b4fa8;
+  --fight: #e0603a;
+  --calm: #3aa58f;
+
+  /* the microscope room */
+  --scope: #0d111c;
+  --scope-2: #161d2e;
+  --scope-ink: #e8edf6;
+  --scope-soft: #9aa6bd;
+  --ch-virus: #b07d24;
+  --ch-neut: #2196c8;
+  --ch-damage: #d24e96;
+  --glow-virus: #ffd27a;
+  --glow-neut: #7fd4ff;
+  --glow-damage: #ff8fc8;
+
+  --display: "Fraunces", Georgia, serif;
+  --text: "Inter", system-ui, -apple-system, sans-serif;
+
+  --read: 720px;    /* one column of reading */
+  --wide: 1060px;   /* exhibits may go wider */
+  --gutter: 24px;
+}
+
+@media (max-width: 720px) { :root { --gutter: 16px; } }
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 17px/1.6 var(--text);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { font-family: var(--display); font-weight: 600; line-height: 1.12; margin: 0; }
+p { margin: 0 0 1em; }
+a { color: inherit; }
+
+
+.wide { max-width: var(--wide); margin: 0 auto; padding: 0 var(--gutter); }
+
+.kicker {
+  font: 600 12px/1 var(--text);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--tissue);
+  margin: 0 0 10px;
+}
+
+.lead { font-size: 20px; color: var(--ink-soft); }
+
+/* skip link — keyboard users land here first */
+.skip {
+  position: absolute; left: -9999px; top: 0; z-index: 99;
+  background: var(--ink); color: var(--paper);
+  padding: 12px 18px; border-radius: 0 0 10px 0; font-weight: 600;
+}
+.skip:focus { left: 0; }
+
+:focus-visible { outline: 3px solid var(--immune); outline-offset: 3px; border-radius: 4px; }
+
+/* ---------------------------------------------------------------- placards
+   Three depths, same picture (guide §6). The visitor chooses; the default is
+   "For everyone". Every depth is in the DOM at all times so that find-in-page,
+   screen readers in browse mode, and printing all reach the full text. */
+
+.placard {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  padding: 20px 22px 6px;
+  margin: 22px 0;
+}
+
+.placard-depths {
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 12px;
+}
+
+.placard-depths button {
+  font: 500 14px/1 var(--text);
+  color: var(--ink-soft);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 11px 15px;          /* >= 40px tap target with the line-height */
+  min-height: 40px;
+  cursor: pointer;
+}
+/* On a narrow screen these three used to wrap to two rows and stop reading as
+   one control. Tighter type and padding keeps them on a single line; the tap
+   target stays at 40px via min-height. */
+@media (max-width: 460px) {
+  .placard-depths { gap: 4px; }
+  .placard-depths button { font-size: 13px; padding: 11px 9px; }
+}
+.placard-depths button:hover { background: var(--paper-deep); }
+.placard-depths button[aria-selected="true"] {
+  background: var(--immune-soft);
+  border-color: var(--immune);
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* Without JavaScript every depth stays visible and the page still reads as a
+   complete explainer; the tab strip only exists once JS can unfold it again. */
+.placard-depths { display: none; }
+.js .placard-depths { display: flex; }
+.js .placard-body > div { display: none; }
+.js .placard-body > div.is-shown { display: block; }
+
+/* the depth's own label, for the no-JS reading and for print */
+.placard-body > div > h4 {
+  font: 600 12px/1 var(--text);
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0 0 8px;
+}
+.js .placard-body > div > h4 { position: absolute; left: -9999px; }
+.placard-body p:last-child { margin-bottom: 1em; }
+
+/* kids' placards run one size larger (guide §3) */
+.placard-body .for-kids { font-size: 21px; line-height: 1.55; }
+.placard-body .for-scientists { font-size: 16px; }
+
+/* claim chips: where a statement comes from. Scientists' depth only (guide §6). */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 0 0 14px; padding: 0; list-style: none; }
+.chips li {
+  font: 500 11px/1 var(--text);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  background: var(--paper-deep);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  padding: 6px 9px;
+}
+.chips li.is-background { background: transparent; border-style: dashed; }
+
+/* ------------------------------------------------------------- honesty notes */
+
+.honesty {
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--ink-soft);
+  margin-top: 10px;
+  font-style: italic;
+}
+
+/* Every animation has a still equivalent and a way back to the start
+   (guide §5). The controls row sits under the exhibit, never over it. */
+/* The controls drive JS-built animation, so without JS they promise something
+   that cannot happen. The placard carries the full meaning either way. */
+.exhibit-controls { display: none; }
+.js .exhibit-controls {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  margin-top: 12px;
+}
+/* The exhibits draw themselves in JS, so without it the frame would be an empty
+   lit box under a caption for a picture that is not there. Both collapse, and the
+   noscript description takes their place. Keyed off the class the script itself
+   adds, so this does not depend on :has() support. */
+.exhibit-controls button {
+  font: 500 14px/1 var(--text);
+  min-height: 40px;
+  padding: 11px 15px;
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  color: var(--ink);
+  cursor: pointer;
+}
+.exhibit-controls button:hover { background: var(--paper-deep); }
+.exhibit-controls .hint { font-size: 13px; color: var(--ink-soft); }
+
+/* ------------------------------------------------------------ atmosphere layer
+   Says nothing. Soft, low opacity, never attention-seeking.
+
+   It used to drift, on a 9-18s loop. It does not any more, and the reason is
+   worth keeping: a blurred layer cannot be composited: the browser re-rasters
+   the blur on every frame it moves, for as long as the page is open. Measured
+   on one machine, idle, no interaction, against an 8.1% floor for a blank page:
+
+       the page with the drift      37.3%
+       the page without it          11.2%
+
+   Twenty-six points of someone's processor, for a wander most readers never
+   consciously notice. The blur stays, the colours stay, the positions stay;
+   only the motion is gone, and still is what it looked like at the start of
+   every cycle anyway. Frank saw this as 50% CPU on his own laptop.
+
+   If this is ever animated again, animate something that is not blurred. */
+
+.atmos { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.atmos span {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--c);
+  opacity: .2;
+  filter: blur(var(--b, 40px));
+}
+
+/* ------------------------------------------------------------------- arrival */
+
+.arrival {
+  position: relative;
+  overflow: hidden;
+  padding: clamp(72px, 12vw, 128px) 0 clamp(56px, 8vw, 96px);
+  background:
+    radial-gradient(1200px 520px at 18% 8%, #fde3dc 0%, transparent 62%),
+    radial-gradient(900px 520px at 88% 82%, #ddf1ec 0%, transparent 62%),
+    var(--paper);
+}
+.arrival .inner { position: relative; z-index: 2; }
+.arrival h1 { font-size: clamp(40px, 7vw, 78px); letter-spacing: -.01em; }
+.arrival h1 em { font-style: normal; color: var(--immune); }
+.arrival .lead { max-width: 34em; margin-top: 20px; }
+
+/* --------------------------------------------------------------------- rooms */
+
+.room { padding: clamp(48px, 7vw, 88px) 0; }
+.room h2 { font-size: clamp(28px, 4vw, 40px); }
+/* Headings and body text share the exhibits' left edge rather than sitting in a
+   narrower centred column, which read as a misalignment rather than a choice.
+   The reading measure is set on the text, not on its container. */
+.room-intro { max-width: 34em; margin-top: 14px; }
+.room .honesty { max-width: 44em; }
+
+hr.rule { border: 0; border-top: 1px solid var(--rule); margin: 0; }
+
+/* ------------------------------------------------------------------- credits */
+
+.credits { background: var(--paper-deep); padding: 56px 0 72px; font-size: 15px; }
+.credits h2 { font-size: 26px; margin-bottom: 14px; }
+.credits ul { padding-left: 1.1em; }
+.credits li { margin-bottom: .5em; }
+
+/* ------------------------------------------------------- reduced motion, last
+   Turning animation off must not lose meaning (guide §5). Anything that moves
+   to teach something also has a still state, so stopping it is safe. */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+  }
+}
+
+.arrival .plate { margin-top: 38px; }
+.arrival .lead { max-width: 34em; }
+.arrival-close { margin-top: 34px; font-size: 21px; color: var(--ink); }
+
+.credits { background: var(--paper-deep); padding: 64px 0 80px; }
+.credits h2 { font-size: clamp(26px, 3.4vw, 36px); margin-bottom: 28px; }
+.credit-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr)); gap: 36px; }
+/* The footer's surface is --paper-deep, where the page colours measure about
+   4.05:1. Darker variants, used only here. */
+.credits { --immune: #00756c; --tissue: #b43d47; }
+.credit-cols h3 { font-size: 15px; letter-spacing: .14em; text-transform: uppercase;
+                  font-family: var(--text); font-weight: 600; color: var(--tissue); margin-bottom: 12px; }
+.credit-cols p { font-size: 15.5px; max-width: 42em; }
+.credit-cols .muted { color: var(--ink-soft); font-size: 14px; }
+.credit-cols a { color: var(--immune); text-underline-offset: 3px; }
+
+/* ------------------------------------------------- back out into the daylight */
+
+.step-up { background: linear-gradient(var(--scope) 0%, #2a2d3a 28%, #cdbdb0 70%, var(--paper) 100%); }
+.step-up .step-cue { bottom: auto; top: 96px; color: var(--ink-soft); }
+
+/* ------------------------------------------------- three ways of asking (room A) */
+
+.ways { list-style: none; margin: 10px 0 0; padding: 22px 28px 0; }
+.way {
+  display: grid;
+  grid-template-columns: 34px 1fr 230px;
+  gap: 18px; align-items: start;
+  padding: 20px 0;
+  border-top: 1px solid var(--rule);
+}
+.way:first-child { border-top: 0; }
+.way-n {
+  width: 28px; height: 28px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--paper-deep); border: 1px solid var(--rule);
+  font: 600 13px/1 var(--text); color: var(--ink-soft);
+}
+.way-body h3 { font-size: 19px; margin-bottom: 5px; }
+.way-sub { margin: 0; color: var(--ink-soft); font-size: 15px; }
+.way-out { text-align: right; font-size: 16px; line-height: 1.4; }
+.way-out strong { font-family: var(--display); font-weight: 600; font-size: 18px; }
+.way-out.lived strong { color: var(--immune); }
+.way-out.died strong  { color: var(--tissue); }
+.way-out.part strong  { color: #8a6b1f; }
+.way-caveat {
+  display: block; margin-top: 5px;
+  font: 500 11px/1.4 var(--text);
+  letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* ------------------------------------------------------- the human bridge */
+
+.bridge {
+  display: grid;
+  grid-template-columns: 1fr 160px 1fr;
+  gap: 26px;
+  /* The two cards hold different amounts of text. Centred, their headings sat
+     on different lines and read as a slip rather than a choice; stretched, they
+     share a top edge and the arrow stays centred on its own. */
+  align-items: stretch;
+  margin: 34px auto;
+}
+.bridge-arrow { align-self: center; }
+.bridge-side {
+  background: var(--card); border: 1px solid var(--rule);
+  border-radius: 16px; padding: 22px 24px;
+}
+.bridge-side h3 { font-size: 17px; color: var(--tissue); margin-bottom: 8px; }
+.bridge-side p { margin: 0; font-size: 15.5px; }
+.bridge-arrow { text-align: center; color: var(--ink-soft); }
+.bridge-arrow svg { width: 110px; height: 54px; }
+.bridge-arrow span {
+  display: block; font: 500 11px/1.5 var(--text);
+  letter-spacing: .14em; text-transform: uppercase;
+}
+
+/* --------------------------------------------------------------- the warning */
+
+.warning {
+  background: #fdeee9;
+  border: 1px solid #e8bfae;
+  border-left: 4px solid var(--fight);
+  border-radius: 12px;
+  padding: 22px 24px;
+  margin: 30px 0;
+}
+.warning h3 { font-size: 17px; color: #9c3d1c; margin-bottom: 8px; }
+.warning p { margin: 0; font-size: 15.5px; }
+
+/* ------------------------------------------------------------------ limits */
+
+.limits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 20px; margin: 32px auto;
+}
+.limit {
+  background: var(--card); border: 1px solid var(--rule);
+  border-radius: 16px; padding: 20px 22px;
+}
+.limit h3 {
+  font-size: 17px; line-height: 1.3; margin-bottom: 8px;
+  /* two lines' worth, so bodies start on the same line across a row */
+  min-height: 2.6em;
+}
+@media (max-width: 560px) { .limit h3 { min-height: 0; } }
+.limit p { margin: 0; font-size: 15px; color: var(--ink-soft); }
+
+.closing-line {
+  font: 400 21px/1.55 var(--display);
+  color: var(--ink);
+  max-width: 30em;
+  margin: 10px auto 0;
+  padding-top: 26px;
+  border-top: 1px solid var(--rule);
+}
+
+
+
+@media (max-width: 720px) {
+  .way { grid-template-columns: 28px 1fr; }
+  .way-out { grid-column: 2; text-align: left; margin-top: 6px; }
+  .bridge { grid-template-columns: 1fr; }
+  .bridge-arrow svg { transform: rotate(90deg); width: 70px; height: 40px; }
+}
+
+/* Reading blocks in the daylight rooms share their plates' left edge rather than
+   sitting in a narrower centred column, which reads as a misalignment. The
+   measure is set on the block, not on a wrapper. */
+.room .placard, .room .warning, .room .closing-line, .room .specialist-note {
+  max-width: var(--read);
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.specialist-note {
+  border-top: 1px solid var(--rule);
+  padding-top: 18px;
+  margin-top: 26px;
+  font-size: 15px;
+}
+.specialist-note summary {
+  cursor: pointer;
+  font: 500 11px/1 var(--text);
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--ink-soft);
+  min-height: 40px; display: flex; align-items: center;
+}
+.specialist-note p { margin: 10px 0 0; color: var(--ink-soft); }
+
+/* A reader arriving cold needs to know what kind of thing this is before the
+   first picture: a real study, roughly how long, and where it came from. */
+.dateline {
+  font: 500 12px/1.6 var(--text);
+  letter-spacing: .1em; text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 18px 0 0;
+}
+.dateline em { font-style: italic; text-transform: none; letter-spacing: .04em; }
+.dateline a { color: var(--immune); text-underline-offset: 3px; }
+
+/* "trained" is load-bearing and used throughout; it is defined once, here. */
+.hall-define {
+  max-width: 36em; margin: 18px auto 0;
+  padding: 14px 18px;
+  border: 1px solid rgba(232, 237, 246, .16);
+  border-radius: 4px;
+  font-size: 15.5px;
+  color: var(--scope-soft);
+}
+.hall-define strong { color: #7af0da; font-weight: 600; }
+
+/* The plate shows two groups of mice and a worm, which immediately raises "why a
+   worm?". Answering it here, before the groundwork, is what stops the worm
+   reading as arbitrary. */
+.why-worm {
+  max-width: 38em;
+  margin: 40px 0 0;
+  padding-top: 28px;
+  border-top: 1px solid var(--rule);
+}
+.why-worm h2 {
+  font-size: clamp(24px, 3.2vw, 32px);
+  margin-bottom: 12px;
+}
+.why-worm p { font-size: 17.5px; }
+.why-worm p:last-child { margin-bottom: 0; }
+
+/* Text that exists only for a screen reader: descriptions that cannot live
+   inside the element they describe, because role="slider" makes its own
+   subtree presentational. */
+.hall[tabindex]:focus { outline: none; }
+
+.vh {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

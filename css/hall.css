@@ -1,0 +1,122 @@
+/* The microscope room, and the walk into it.
+   Dark palette from docs/style-guide.md §2. Channel colours are validated
+   together on --scope; if one changes, re-run the dataviz validator. */
+
+/* --------------------------------------------------------------- primers */
+
+.primers {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 18px;
+  margin: 32px auto;
+}
+.primer {
+  background: var(--card);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  padding: 20px 22px;
+}
+.primer h3 { font-size: 20px; margin-bottom: 8px; color: var(--tissue); }
+.primer p { font-size: 15.5px; color: var(--ink-soft); margin: 0; }
+
+/* --------------------------------------- step up to the microscope (guide §5)
+   A full screen of scroll from daylight into the dark. It carries no meaning,
+   so it is hidden from assistive technology. */
+
+.step {
+  position: relative;
+  height: 60vh;
+  min-height: 320px;
+  background: linear-gradient(var(--paper) 0%, #cdbdb0 32%, #2a2d3a 72%, var(--scope) 100%);
+}
+.step-cue {
+  position: absolute; left: 0; right: 0; bottom: 96px;
+  text-align: center;
+  color: #e8edf6;
+  font: 500 13px/1 var(--text);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  opacity: .8;
+  margin: 0;
+}
+.step-ring {
+  position: absolute; left: 50%; bottom: -64px;
+  width: 128px; height: 128px; margin-left: -64px;
+  border-radius: 50%;
+  border: 2px solid rgba(232, 237, 246, .32);
+  box-shadow: 0 0 0 10px rgba(232, 237, 246, .05),
+              inset 0 0 40px rgba(127, 212, 255, .14);
+}
+
+/* ------------------------------------------------------------- the dark room */
+
+.hall {
+  background: var(--scope);
+  color: var(--scope-ink);
+  padding: 112px 0 96px;
+}
+.hall .hall-head { text-align: center; margin-bottom: 64px; }
+.hall .hall-head h2 { font-size: clamp(34px, 5.5vw, 56px); }
+.hall .hall-head p { color: var(--scope-soft); max-width: 36em; margin: 16px auto 0; font-size: 19px; }
+.hall .kicker { color: #6fe3d0; }
+
+.station {
+  max-width: var(--wide);
+  margin: 0 auto;
+  padding: 56px var(--gutter);
+  border-top: 1px solid rgba(232, 237, 246, .12);
+}
+.station:first-of-type { border-top: 0; }
+.station h3 { font-size: clamp(26px, 3.6vw, 36px); margin-bottom: 14px; }
+.station-lead { color: var(--scope-soft); max-width: 46ch; font-size: 18px; margin-bottom: 4px; }
+
+.hall figcaption, .hall .honesty { color: var(--scope-soft); }
+
+.hall .exhibit-controls button {
+  background: var(--scope-2);
+  border-color: rgba(232, 237, 246, .22);
+  color: var(--scope-ink);
+}
+.hall .exhibit-controls button:hover { background: #1e273c; }
+.hall .exhibit-controls button[aria-pressed="true"] {
+  border-color: #6fe3d0;
+  color: #bdf4ea;
+}
+.hall .exhibit-controls .hint { color: var(--scope-soft); }
+
+/* placards keep the paper feel inside the dark room: the reading surface does
+   not change just because the exhibit is lit differently */
+.hall .placard { background: var(--scope-2); border-color: rgba(232, 237, 246, .14); }
+.hall .placard-depths { border-bottom-color: rgba(232, 237, 246, .14); }
+.hall .placard-depths button { color: var(--scope-soft); }
+.hall .placard-depths button:hover { background: #1e273c; }
+.hall .placard-depths button[aria-selected="true"] {
+  background: rgba(111, 227, 208, .14);
+  border-color: #6fe3d0;
+  color: #eafaf7;
+}
+.hall .placard-body > div > h4 { color: var(--scope-soft); }
+.hall .chips li {
+  background: rgba(232, 237, 246, .07);
+  border-color: rgba(232, 237, 246, .18);
+  color: var(--scope-soft);
+}
+
+
+/* drag affordance on the exhibits that hand over control (guide §5) */
+.plate [data-rail] svg[data-ex] { cursor: grab; }
+.plate[data-grabbing="true"] [data-rail] svg[data-ex] { cursor: grabbing; }
+
+@media (max-width: 720px) {
+  .station { padding: 40px var(--gutter); }
+  .step { height: 46vh; }
+}
+
+/* The global focus ring is the daylight teal, which sits at about 2:1 on the
+   dark plates — a keyboard user would lose track of where they are. The dark
+   rooms get their own ring. */
+.hall :focus-visible,
+.plate :focus-visible {
+  outline: 3px solid #7af0da;
+  outline-offset: 3px;
+}

@@ -1,0 +1,679 @@
+/* The instrument plate: a station you stop at and operate.
+
+   The furniture here — rails, brackets, hairlines, rules — is the visual grammar
+   of scientific plates, and it is doing honest work. A plate number is a figure
+   reference. A specimen label is a claim with a citation. The epistemic apparatus
+   IS the ornament, so the caveats are set like part of the instrument rather than
+   apologised for underneath it. */
+
+.plate {
+  position: relative;
+  margin: 28px auto 0;
+  max-width: var(--wide);
+  background:
+    /* fibre: three near-invisible rulings at odd angles, as paper has */
+    repeating-linear-gradient(93deg, rgba(232,237,246,.016) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(3deg,  rgba(232,237,246,.012) 0 1px, transparent 1px 7px),
+    radial-gradient(130% 90% at 50% 0%, #1b2436 0%, #141b2b 45%, #0f1524 100%);
+  border: 1px solid rgba(232, 237, 246, .16);
+  border-radius: 6px;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, .55), inset 0 1px 0 rgba(232, 237, 246, .06);
+  padding: 0 0 26px;
+  overflow: hidden;
+}
+
+/* hairline inset border, 10px in, as on an engraved plate */
+.plate::after {
+  content: "";
+  position: absolute; inset: 9px;
+  border: 1px solid rgba(232, 237, 246, .09);
+  border-radius: 3px;
+  pointer-events: none;
+}
+
+/* corner brackets */
+.plate-corner {
+  position: absolute; width: 16px; height: 16px;
+  border: 0 solid rgba(111, 227, 208, .5);
+  pointer-events: none;
+}
+.plate-corner.tl { top: 15px; left: 15px; border-top-width: 1px; border-left-width: 1px; }
+.plate-corner.tr { top: 15px; right: 15px; border-top-width: 1px; border-right-width: 1px; }
+.plate-corner.bl { bottom: 15px; left: 15px; border-bottom-width: 1px; border-left-width: 1px; }
+.plate-corner.br { bottom: 15px; right: 15px; border-bottom-width: 1px; border-right-width: 1px; }
+
+/* ---------------------------------------------------------------- top rail */
+
+.plate-rail {
+  display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap;
+  padding: 20px 28px 14px;
+  border-bottom: 1px solid rgba(232, 237, 246, .12);
+  font: 500 11px/1.4 var(--text);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--scope-soft);
+}
+.plate-rail .mid { flex: 1; }
+.plate-rail .caveat { color: #c7a66a; letter-spacing: .14em; }
+
+/* ------------------------------------------------------------- the fields */
+
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr 300px;
+  gap: 26px;
+  padding: 26px 28px 0;
+  align-items: start;
+}
+
+.field { margin: 0; }
+.eyepiece {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #070a12;
+  /* the barrel: a bright inner lip, a dark body, a faint outer halo */
+  box-shadow:
+    inset 0 0 0 1px rgba(232, 237, 246, .22),
+    inset 0 0 26px rgba(0, 0, 0, .9),
+    0 0 0 7px rgba(232, 237, 246, .035),
+    0 0 0 8px rgba(232, 237, 246, .07),
+    0 14px 34px rgba(0, 0, 0, .6);
+}
+.eyepiece canvas, .eyepiece svg {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+}
+/* vignette: the edge of the light cone, not a claim */
+.eyepiece::after {
+  content: "";
+  position: absolute; inset: 0; border-radius: 50%; pointer-events: none;
+  background: radial-gradient(circle at 50% 50%, transparent 54%, rgba(4,6,12,.75) 92%);
+}
+
+.field figcaption {
+  margin-top: 16px;
+  text-align: center;
+  font: 500 11px/1.5 var(--text);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--scope-soft);
+}
+.field figcaption b {
+  display: block;
+  font: 600 15px/1.3 var(--display);
+  letter-spacing: .02em;
+  text-transform: none;
+  margin-bottom: 3px;
+}
+.field.lived figcaption b { color: #7af0da; }
+.field.died  figcaption b { color: #e4577c; }
+
+/* ------------------------------------------------------- the notes column */
+
+.notes { border-left: 1px solid rgba(232, 237, 246, .12); padding-left: 22px; }
+.notes h4 {
+  font: 500 11px/1 var(--text);
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--scope-soft);
+  margin: 0 0 16px;
+}
+.note { display: flex; gap: 12px; margin-bottom: 18px; }
+.note .n {
+  flex: none;
+  width: 22px; height: 22px; border-radius: 50%;
+  display: grid; place-items: center;
+  font: 600 11px/1 var(--text);
+  color: #0d111c; background: #6fe3d0;
+}
+.note p { margin: 0; font-size: 14.5px; line-height: 1.5; color: #d6deec; }
+.note p em { color: var(--scope-soft); font-style: italic; }
+
+/* --------------------------------------------------------------- readout */
+
+.readout {
+  margin: 26px 28px 0;
+  border-top: 1px solid rgba(232, 237, 246, .12);
+  border-bottom: 1px solid rgba(232, 237, 246, .12);
+  padding: 4px 0;
+}
+.readout-row {
+    display: grid;
+  grid-template-columns: 22px auto 1fr;
+  gap: 14px; align-items: center;
+  padding: 11px 2px;
+  border-top: 1px solid rgba(232, 237, 246, .07);
+}
+.readout-row:first-child { border-top: 0; }
+.readout-row .glyph { width: 22px; height: 22px; }
+.readout-row .what {
+  font: 500 12px/1 var(--text);
+  letter-spacing: .14em; text-transform: uppercase;
+  color: #d6deec;
+}
+.readout-row .verdict {
+  font: 400 14px/1.3 var(--display);
+  color: var(--scope-soft);
+  text-align: right;
+}
+.readout-row .verdict strong { color: #e8edf6; font-weight: 600; }
+
+/* ------------------------------------------------------- channel switches */
+
+.channels {
+  display: flex; flex-wrap: wrap; gap: 10px;
+  margin: 22px 28px 0;
+  align-items: center;
+}
+/* The label takes a line of its own. It used to sit inline, which put the first
+   switch one label-width to the right of the other two as soon as they wrapped,
+   leaving three buttons on a ragged left edge. */
+.channels .lab {
+  flex: 0 0 100%;
+  font: 500 11px/1 var(--text);
+  letter-spacing: .18em; text-transform: uppercase;
+  color: var(--scope-soft);
+  margin: 0 0 2px;
+}
+.channels button {
+  display: inline-flex; align-items: center; gap: 9px;
+  min-height: 42px; padding: 9px 16px 9px 12px;
+  background: rgba(232, 237, 246, .04);
+  border: 1px solid rgba(232, 237, 246, .18);
+  border-radius: 3px;
+  color: var(--scope-soft);
+  font: 500 12px/1 var(--text);
+  letter-spacing: .1em; text-transform: uppercase;
+  cursor: pointer;
+  transition: background .25s, border-color .25s, color .25s;
+}
+.channels button:hover { background: rgba(232, 237, 246, .09); }
+.channels button[aria-pressed="true"] { color: #eef3fb; background: rgba(232,237,246,.08); }
+.channels button[data-ch="virus"][aria-pressed="true"]  { border-color: #d9a94b; }
+.channels button[data-ch="damage"][aria-pressed="true"] { border-color: #e46aa8; }
+.channels button[data-ch="neut"][aria-pressed="true"]   { border-color: #46a8d8; }
+.channels button svg { flex: none; }
+.channels button[aria-pressed="false"] svg { opacity: .35; }
+
+.plate-foot {
+  margin: 20px 28px 0;
+  font: italic 13px/1.6 var(--text);
+  color: var(--scope-soft);
+  max-width: 62ch;
+}
+.plate-foot b { font-style: normal; font-weight: 600; color: #c7a66a; letter-spacing: .04em; }
+
+@media (max-width: 1000px) {
+  .fields { grid-template-columns: 1fr 1fr; }
+  .notes { grid-column: 1 / -1; border-left: 0; border-top: 1px solid rgba(232,237,246,.12);
+           padding-left: 0; padding-top: 20px; }
+}
+@media (max-width: 640px) {
+  .fields { grid-template-columns: 1fr; gap: 30px; padding: 20px 16px 0; }
+  .plate-rail, .channels, .readout, .plate-foot { margin-inline: 16px; padding-inline: 0; }
+  .plate-rail { padding: 18px 0 12px 12px; letter-spacing: .12em; }
+  /* The caveat takes its own line here. Beside a title that has wrapped to two
+     lines there is no room for it, and it is the one thing on the rail that
+     must stay legible. */
+  .plate-rail .caveat { flex: 0 0 100%; }
+  .readout { margin-inline: 16px; }
+}
+
+/* ------------------------------------------------------------------ no JS
+   The eyepieces draw themselves in canvas, and the channel switches drive that
+   drawing, so both are hidden without JS. The readout is not: those three rows
+   are the plate's claim written out, and they stand on their own. */
+html:not(.js) #plate-proof .plate-rail .caveat,
+html:not(.js) .cellpick,
+html:not(.js) .fields,
+html:not(.js) .specimens,
+html:not(.js) .specimens-join,
+html:not(.js) .channels { display: none; }
+html:not(.js) .readout { margin-top: 0; border-top: 0; }
+.plate noscript p {
+  margin: 20px 28px 0;
+  font-size: 15px; line-height: 1.6; color: #d6deec;
+  border-left: 2px solid rgba(232,237,246,.2); padding-left: 14px;
+}
+/* That colour is for the dark plates. On the daylight plate it is ~1.25:1 —
+   the arrival's whole no-JS fallback was all but invisible. */
+.plate.daylight noscript p { color: var(--ink-soft); border-left-color: var(--rule); }
+
+@media (max-width: 640px) { .plate noscript p { margin-inline: 16px; } }
+
+/* ------------------------------------------- the counter, and the day rail
+   The big numeral is the instrument's readout. It is a claims-layer element:
+   it states which day you are looking at, and the line under it states what is
+   happening on that day — including, for nineteen of them, nothing. */
+
+.counter {
+  display: flex; align-items: baseline; gap: 18px; flex-wrap: wrap;
+  padding: 22px 28px 0;
+}
+.counter-day {
+  font: 600 clamp(30px, 4.4vw, 46px)/1 var(--display);
+  color: #eef3fb;
+  font-variant-numeric: tabular-nums;
+  min-width: 4.2ch;
+}
+.counter-note {
+  font: 400 17px/1.4 var(--text);
+  color: var(--scope-soft);
+  padding-bottom: 4px;
+}
+
+.ex-rail { padding: 6px 28px 0; cursor: grab; }
+.plate[data-grabbing="true"] .ex-rail { cursor: grabbing; }
+.ex-rail svg { display: block; width: 100%; height: auto; }
+.ex-rail:focus-visible { outline: 2px solid #6fe3d0; outline-offset: 4px; border-radius: 4px; }
+
+.plate-controls { margin: 4px 28px 0; }
+html:not(.js) .plate-controls, html:not(.js) .ex-rail, html:not(.js) .counter { display: none; }
+
+/* the row that foreshadows station 5 */
+.readout-row.is-flag .what { color: #7af0da; }
+/* the microscope's readout follows its channel switches: a row whose channel
+   is off recedes, so the rows and the picture always agree. */
+.readout-row.is-off { opacity: .38; }
+.readout-row.is-off .glyph { filter: grayscale(1); }
+
+.readout-row.is-flag .verdict strong { color: #7af0da; }
+
+@media (max-width: 640px) {
+  .counter { padding: 18px 16px 0; gap: 12px; }
+  .ex-rail { padding: 6px 10px 0; }
+  .plate-controls { margin-inline: 16px; }
+}
+
+/* ===================================================================== DAYLIGHT
+   The same grammar, warm. One site, one visual language: a plate in the daylight
+   rooms is the same instrument as a plate in the microscope room, printed on
+   paper instead of lit from below. Rails, corner brackets, hairlines and the
+   caveat-in-the-rail all behave identically; only the surface changes. */
+
+.plate.daylight {
+  background:
+    repeating-linear-gradient(93deg, rgba(90,63,58,.022) 0 1px, transparent 1px 5px),
+    repeating-linear-gradient(3deg,  rgba(90,63,58,.016) 0 1px, transparent 1px 7px),
+    radial-gradient(130% 90% at 50% 0%, #fffdfa 0%, #fdf6ee 46%, #f7ebdd 100%);
+  border-color: var(--rule);
+  box-shadow: 0 18px 44px rgba(90, 63, 58, .1), inset 0 1px 0 #fff;
+}
+.plate.daylight::after { border-color: rgba(90, 63, 58, .12); }
+.plate.daylight .plate-corner { border-color: rgba(200, 69, 79, .45); }
+.plate.daylight .plate-rail {
+  border-bottom-color: var(--rule);
+  color: var(--ink-soft);
+}
+.plate.daylight .plate-rail .caveat { color: #896d35; }  /* 4.5:1; #9a7a3c was 3.8:1 */
+.plate.daylight .plate-foot { color: var(--ink-soft); }
+.plate.daylight .plate-foot b { color: #7d6230; }  /* 4.9:1; #896d35 was 4.2:1 */
+
+/* A .room carries no horizontal gutter of its own — its text sits inside .wide —
+   so a plate placed directly in one ran edge to edge at every width below --wide.
+   max-width on .plate still caps it. */
+.room > .plate {
+  width: calc(100% - 2 * var(--gutter));
+  /* match the text column, which is --wide minus its own gutters: a plate in a
+     .room was landing on --wide's outer edge, 24px wider than every plate in a
+     step, which read on screen as two column widths on one page. */
+  max-width: calc(var(--wide) - 2 * var(--gutter));
+  margin-inline: auto;
+}
+
+/* the specimen pair */
+.specimens {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(18px, 4vw, 54px);
+  padding: 30px 28px 0;
+  align-items: start;
+}
+.specimen { margin: 0; text-align: center; display: flex; flex-direction: column; }
+/* One fixed height for both drawings. The captions below them wrap to
+   different numbers of lines, and anything that sizes the figure as a whole
+   lands the two lungs at different heights. */
+.specimen svg { display: block; width: 100%; height: clamp(170px, 33vw, 320px); }
+.specimen figcaption { margin-top: 14px; }
+.specimen .tag {
+  display: block;
+  font: 600 15px/1.35 var(--display);
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.specimen .sub {
+  display: block;
+  font: 500 11px/1.5 var(--text);
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.specimen.trained .tag { color: var(--immune); }
+.specimen.naive .tag { color: var(--tissue); }
+
+/* the line that joins them */
+.specimens-join {
+  text-align: center;
+  padding: 26px 28px 0;
+  font: 500 12px/1 var(--text);
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.specimens-join span {
+  display: inline-block;
+  border-top: 1px solid var(--rule);
+  padding-top: 14px;
+  min-width: min(420px, 70%);
+}
+
+/* Breathing: atmosphere, slow, says nothing. It was a 2.8% scale about the
+   base, which nobody could see - and an animation nobody can see is only a
+   liability. The origin is now the windpipe, so the trachea stays put and the
+   lobes fill downward and outward the way a chest does, and the lungs stretch
+   more than they widen. Stopped entirely under prefers-reduced-motion. */
+.breath {
+  transform-origin: 50% 12%;
+  animation: breath 4.2s ease-in-out infinite alternate;
+}
+@keyframes breath { to { transform: scale(1.04, 1.09); } }
+
+@media (max-width: 640px) {
+  .specimens { padding: 22px 16px 0; gap: 14px; }
+  .specimens-join { padding-inline: 16px; letter-spacing: .14em; }
+  .specimen .sub { letter-spacing: .1em; font-size: 10.5px; }
+}
+
+/* ------------------------------------------------------------------ stats
+   Two live numerals that come apart as the days pass. The number arriving at
+   zero while you drag is the station's whole content, so it is set at display
+   size and given room. */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 14px;
+  margin: 18px 28px 0;
+}
+.stat {
+  border: 1px solid rgba(232, 237, 246, .14);
+  border-radius: 4px;
+  padding: 14px 16px;
+  background: rgba(232, 237, 246, .03);
+}
+.stat-v {
+  display: block;
+  font: 600 clamp(26px, 3.4vw, 38px)/1 var(--display);
+  font-variant-numeric: tabular-nums;
+  margin-bottom: 6px;
+}
+.stat.trained .stat-v { color: #7af0da; }
+.stat.naive   .stat-v { color: #e4577c; }
+.stat-l {
+  display: block;
+  font: 500 11px/1.4 var(--text);
+  letter-spacing: .14em; text-transform: uppercase;
+  color: var(--scope-soft);
+}
+.stat-s {
+  display: block; margin-top: 8px;
+  font: 400 13px/1.4 var(--text);
+  color: var(--scope-soft);
+  font-variant-numeric: tabular-nums;
+}
+.stat-s b { color: #d6deec; font-weight: 600; }
+
+html:not(.js) .stats { display: none; }
+
+@media (max-width: 640px) { .stats { margin-inline: 16px; } }
+
+/* --------------------------------------------------------- the measurement sheet
+   Position means direction, never magnitude. The middle column is the argument, so it is set apart rather than sized. */
+
+.sheet {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1.15fr;
+  gap: 22px;
+  padding: 26px 28px 0;
+  align-items: start;
+}
+.sheet-col h4 {
+  font: 500 11px/1.4 var(--text);
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--scope-soft);
+  margin: 0 0 14px; padding-bottom: 10px;
+  border-bottom: 1px solid rgba(232, 237, 246, .14);
+}
+.sheet-col[data-col="less"] h4 { color: #e4577c; border-bottom-color: rgba(255,154,169,.3); }
+.sheet-col[data-col="more"] h4 { color: #7af0da; border-bottom-color: rgba(47,214,189,.3); }
+
+.chip {
+  display: grid;
+  grid-template-columns: 14px 1fr;
+  gap: 10px; align-items: baseline;
+  width: 100%; text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 3px;
+  padding: 10px 10px 10px 8px;
+  margin-bottom: 2px;
+  color: #d6deec;
+  font: 400 14.5px/1.4 var(--text);
+  cursor: pointer;
+  min-height: 42px;
+}
+.chip:hover { background: rgba(232, 237, 246, .055); }
+.chip[aria-pressed="true"] {
+  background: rgba(232, 237, 246, .09);
+  border-color: rgba(232, 237, 246, .22);
+}
+.chip-mark {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--scope-soft); align-self: center;
+}
+.chip[data-kind="imaged"] .chip-mark { background: none; border: 1px solid var(--scope-soft); border-radius: 1px; }
+.sheet-col[data-col="less"] .chip-mark { background: #e4577c; }
+.sheet-col[data-col="more"] .chip-mark { background: #7af0da; }
+.sheet-col[data-col="less"] .chip[data-kind="imaged"] .chip-mark,
+.sheet-col[data-col="more"] .chip[data-kind="imaged"] .chip-mark { background: none; }
+.sheet-col[data-col="less"] .chip[data-kind="imaged"] .chip-mark { border-color: #e4577c; }
+.sheet-col[data-col="more"] .chip[data-kind="imaged"] .chip-mark { border-color: #7af0da; }
+/* An element, not generated content: as `content: "!"` it was read aloud, and
+   MIP-1alpha announced as "MIP-1a exclamation mark". The flag's meaning is in
+   the hidden kind text sheet.js adds. */
+.chip-flag {
+  display: inline-grid; place-items: center; font-style: normal;
+  width: 15px; height: 15px; margin-left: 7px; border-radius: 50%;
+  background: #c7a66a; color: #0d111c;
+  font-weight: 700; font-size: 10px; line-height: 1; vertical-align: 1px;
+}
+.chip-note { grid-column: 2; font-size: 13.5px; color: var(--scope-soft); margin-top: 5px; }
+.is-live .chip-note { display: none; }
+
+.sheet-detail {
+  margin: 24px 28px 0; padding: 18px 20px;
+  background: rgba(232, 237, 246, .04);
+  border: 1px solid rgba(232, 237, 246, .12);
+  border-radius: 4px;
+  min-height: 112px;
+}
+.sheet-prompt { margin: 0; color: var(--scope-soft); font-style: italic; }
+.sheet-verdict {
+  margin: 0 0 4px;
+  font: 500 11px/1 var(--text);
+  letter-spacing: .16em; text-transform: uppercase;
+  color: var(--scope-soft);
+}
+.sheet-verdict[data-col="less"] { color: #e4577c; }
+.sheet-verdict[data-col="more"] { color: #7af0da; }
+.sheet-name { margin: 0 0 8px; font: 600 19px/1.25 var(--display); color: #eef3fb; }
+.sheet-name em {
+  display: block; margin-top: 5px;
+  font: 400 13px/1.3 var(--text); font-style: normal;
+  letter-spacing: .06em; color: var(--scope-soft);
+}
+.sheet-body { margin: 0; font-size: 15px; color: #d6deec; max-width: 62ch; }
+
+.sheet-key {
+  display: flex; gap: 22px; flex-wrap: wrap;
+  margin: 16px 28px 0;
+  font: 400 12.5px/1 var(--text); color: var(--scope-soft);
+}
+.sheet-key i { display: inline-block; width: 9px; height: 9px; margin-right: 7px; }
+.sheet-key .k-counted { border-radius: 50%; background: var(--scope-soft); }
+.sheet-key .k-imaged { border: 1px solid var(--scope-soft); border-radius: 1px; }
+.sheet-key .k-flag {
+  display: inline-grid; place-items: center; width: 13px; height: 13px;
+  border-radius: 50%; background: #c7a66a; color: #0d111c;
+  font: 700 9px/1 var(--text); font-style: normal; vertical-align: -2px;
+}
+
+html:not(.js) .sheet-detail { display: none; }
+
+@media (max-width: 860px) {
+  .sheet { grid-template-columns: 1fr; gap: 10px; padding: 20px 16px 0; }
+  .sheet-col h4 { margin-top: 12px; }
+  .sheet-detail, .sheet-key { margin-inline: 16px; }
+}
+
+/* --------------------------------------------------------- the proof branches */
+
+.branch-in { animation: branch-in .55s ease-out both; }
+@keyframes branch-in { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: none; } }
+
+.proof-note {
+  margin: 6px 28px 0;
+  min-height: 3.2em;
+  font-size: 15.5px; line-height: 1.55;
+  color: #d6deec;
+  max-width: 68ch;
+  border-left: 2px solid rgba(232, 237, 246, .18);
+  padding-left: 14px;
+}
+.plate-rail .caveat [data-step] { font-variant-numeric: tabular-nums; }
+html:not(.js) .proof-note { display: none; }
+
+@media (max-width: 640px) { .proof-note { margin-inline: 16px; } }
+
+/* ------------------------------------------------------- station 6: memory */
+
+.cellpick { display: flex; gap: 10px; flex-wrap: wrap; margin: 22px 28px 6px; }
+.cellpick button {
+  min-height: 42px; padding: 11px 18px;
+  background: rgba(232, 237, 246, .04);
+  border: 1px solid rgba(232, 237, 246, .18);
+  border-radius: 3px;
+  color: var(--scope-soft);
+  font: 500 13px/1 var(--text); letter-spacing: .06em;
+  cursor: pointer; transition: all .25s;
+}
+.cellpick button:hover { background: rgba(232, 237, 246, .09); }
+.cellpick button[aria-pressed="true"] {
+  color: #eef3fb; border-color: #8f6fd0; background: rgba(143, 111, 208, .16);
+}
+
+.mem-stats { display: flex; gap: 36px; flex-wrap: wrap; margin: 10px 28px 0; }
+.mem-stats .stat { border: 0; background: none; padding: 0; }
+.mem-stats .stat-v { color: #c9a5ff; }
+.is-trained .mem-stats .stat-v { color: #d9bbff; }
+
+.loci { margin: 26px 28px 0; }
+.loci h4 {
+  font: 500 11px/1 var(--text); letter-spacing: .16em; text-transform: uppercase;
+  color: var(--scope-soft); margin: 0 0 12px;
+}
+.loci table { width: 100%; border-collapse: collapse; font-size: 14.5px; }
+.loci th {
+  text-align: left; font: 500 11px/1.4 var(--text);
+  letter-spacing: .12em; text-transform: uppercase; color: var(--scope-soft);
+  padding: 0 12px 10px 0; border-bottom: 1px solid rgba(232, 237, 246, .14);
+}
+.loci td { padding: 11px 12px 11px 0; border-bottom: 1px solid rgba(232, 237, 246, .07); color: #d6deec; }
+.loci td.up { color: #9fe8da; }
+.loci td.down { color: #ffc08a; }
+.loci tr.is-flag td { background: rgba(199, 166, 106, .07); }
+.loci tr.is-flag td:first-child { box-shadow: inset 2px 0 0 #c7a66a; padding-left: 10px; }
+
+@media (max-width: 640px) {
+  .cellpick, .mem-stats, .loci { margin-inline: 16px; }
+  /* below ~360px the fourth column is clipped by the plate, and it carries the
+     one row the step turns on. Let the table scroll rather than lose it. */
+  .loci { overflow-x: auto; }
+  .loci table { min-width: 290px; }
+  .loci table { font-size: 13.5px; }
+}
+
+/* Plain language first, the technical name under it. A sheet of bare acronyms
+   is unreadable to the audience this site is for, and the acronym is not the
+   point - the direction is. */
+.chip-name em {
+  display: block;
+  font: 400 12px/1.3 var(--text);
+  font-style: normal;
+  letter-spacing: .06em;
+  color: var(--scope-soft);
+  margin-top: 3px;
+}
+.loci td.what-for { color: var(--scope-soft); font-size: 13.5px; }
+
+/* --------------------------------------------------------------- phone fixes
+   Found by rendering the whole page at 390px rather than spot-checking it. */
+
+@media (max-width: 640px) {
+  /* Three columns put a four-word label in a 60px track and wrapped it to four
+     lines. Stack: what it is, then what it did. */
+  .readout-row {
+    grid-template-columns: 22px 1fr;
+    row-gap: 4px;
+    padding: 13px 2px;
+  }
+  .readout-row .verdict {
+    grid-column: 2;
+    text-align: left;
+    font-size: 15px;
+  }
+  .readout-row .what { align-self: center; }
+
+  /* Give the stat numerals room rather than letting two sit in a cramped row. */
+  .stats { grid-template-columns: 1fr; }
+}
+
+/* ------------------------------------------- the proof, stacked for narrow screens */
+
+.proof-list { display: none; list-style: none; gap: 10px; margin: 20px 28px 0; padding: 0; }
+
+/* The branch drawing is 920 units wide and its labels are set in those units,
+   so the moment the figure is given less than about 900px the 14.5px condition
+   lines render at 10px and the captions at 7px. Below that width it is replaced
+   by the same five branches stacked, which is a real reflow; side-scrolling the
+   drawing behind a scrollbar made the figure read as broken instead. */
+@media (max-width: 900px) {
+  #plate-proof .ex-rail { display: none; }
+  .proof-list { display: grid; }
+}
+
+.pbranch {
+  border-left: 3px solid var(--tone);
+  padding: 12px 0 12px 14px;
+  opacity: 0; transform: translateY(6px);
+  transition: opacity .5s ease, transform .5s ease;
+}
+.pbranch.is-in { opacity: 1; transform: none; }
+.pbranch.is-control { border-left-style: dotted; opacity: .85; }
+.pbranch.is-control.is-in { opacity: .85; }
+
+.pb-badge {
+  display: inline-block; margin-bottom: 5px;
+  font: 500 10px/1 var(--text); letter-spacing: .16em; text-transform: uppercase;
+  color: #8d99b0;
+}
+.pb-cond { margin: 0; font-size: 15px; color: #e8edf6; }
+.pb-out  { margin: 4px 0 0; font-size: 15px; font-weight: 600; color: var(--tone); }
+.pb-tag  {
+  display: inline-block; margin-left: 4px;
+  font: 500 11px/1 var(--text); letter-spacing: .08em; text-transform: uppercase;
+  color: #c7a66a;
+}
+.pb-why  { margin: 5px 0 0; font-size: 13.5px; font-style: italic; color: #aab6cb; }
+
+@media (max-width: 640px) {
+  .proof-list { display: grid; margin-inline: 16px; }
+}
