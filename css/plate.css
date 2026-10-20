@@ -367,12 +367,27 @@ html:not(.js) .plate-controls, html:not(.js) .ex-rail, html:not(.js) .counter { 
 
 /* Breathing: atmosphere, slow, says nothing. It was a 2.8% scale about the
    base, which nobody could see - and an animation nobody can see is only a
-   liability. The origin is now the windpipe, so the trachea stays put and the
-   lobes fill downward and outward the way a chest does, and the lungs stretch
-   more than they widen. Stopped entirely under prefers-reduced-motion. */
+   liability. The origin is the windpipe, so the trachea stays put and the lobes
+   fill downward and outward the way a chest does, and the lungs stretch more
+   than they widen. Stopped entirely under prefers-reduced-motion.
+
+   THE CLASS GOES ON THE <svg>, NEVER ON A GROUP INSIDE IT. The airway tree is
+   grown by recursion and is 1,536 paths per lung; with the animation on an
+   inner <g> the browser cannot composite it, so it re-rasterised 3,072 vector
+   paths sixty times a second, for ever, visible or not. On the <svg> element -
+   which is replaced content and can be promoted - the lungs are rasterised once
+   into a texture and the GPU scales the texture. Same picture, no main thread.
+
+   The geometry is unchanged: scaling the group about 12% of the viewBox and
+   scaling the element about 12% of its box are the same transform in the same
+   proportional space, and the drawing's lowest point lands at 98.4% either way.
+
+   will-change is what guarantees the promotion. Do not remove it thinking it is
+   a micro-optimisation; without it this is the slow version again. */
 .breath {
   transform-origin: 50% 12%;
   animation: breath 4.2s ease-in-out infinite alternate;
+  will-change: transform;
 }
 @keyframes breath { to { transform: scale(1.04, 1.09); } }
 

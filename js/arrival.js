@@ -71,7 +71,11 @@
   function specimen(svg) {
     svg.setAttribute("viewBox", "0 0 300 320");
     var r = rng(SEED);
-    var g = el("g", { class: "breath" }, svg);
+    /* The breath is applied to the <svg> element, NOT to this group. See the
+       note on .breath in plate.css: a transform on an SVG's contents cannot be
+       composited, so it repaints every path in here on every frame. */
+    svg.classList.add("breath");
+    var g = el("g", {}, svg);
 
     /* The tree is clipped to the body. Left to itself a branching rule sprawls
        past the organ and reads as coral; clipped, it fills the lobes the way an
