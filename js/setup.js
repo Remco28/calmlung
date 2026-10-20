@@ -242,7 +242,7 @@
     else if ("IntersectionObserver" in window) {
       new IntersectionObserver(function (es) {
         es.forEach(function (e) { if (e.isIntersecting) start(); });
-      }, { threshold: .4 }).observe(plate);
+      }, { threshold: 0, rootMargin: "-20% 0px -20% 0px" }).observe(plate);
     } else start();
 
     /* The layout is in pixels, so a width change is a relayout, not a rescale. */

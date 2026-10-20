@@ -164,6 +164,16 @@
       });
     });
 
+    /* Reduced motion gets the finished state, like every other exhibit and like
+       the README promises - it just gets it without the transition. The click
+       goes through the normal path so the button, the class and the drawing
+       cannot disagree; it is untrusted, so it does not count as the reader
+       having chosen. */
+    if (still) {
+      var tb = plate.querySelector('[data-cell="trained"]');
+      if (tb) tb.click();
+    }
+
     /* a reader who touches nothing sees the change happen once */
     if (!still && "IntersectionObserver" in window) {
       new IntersectionObserver(function (es, ob) {
@@ -177,7 +187,7 @@
             if (b) b.click();
           }, 900);
         });
-      }, { threshold: .4 }).observe(plate);
+      }, { threshold: 0, rootMargin: "-20% 0px -20% 0px" }).observe(plate);
     }
   }
 

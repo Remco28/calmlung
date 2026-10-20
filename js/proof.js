@@ -200,7 +200,7 @@
     else if ("IntersectionObserver" in window) {
       new IntersectionObserver(function (es, ob) {
         es.forEach(function (e) { if (e.isIntersecting) { run(); ob.disconnect(); } });
-      }, { threshold: .3 }).observe(plate);
+      }, { threshold: 0, rootMargin: "-20% 0px -20% 0px" }).observe(plate);
     } else run();
 
         /* WCAG 2.2.2, same as the two rails. "Show all five" ends the sequence but

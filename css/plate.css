@@ -672,7 +672,10 @@ html:not(.js) .proof-note { display: none; }
   transition: opacity .5s ease, transform .5s ease;
 }
 .pbranch.is-in { opacity: 1; transform: none; }
-.pbranch.is-control { border-left-style: dotted; opacity: .85; }
+/* Styling only. Putting opacity here overrode .pbranch's own `opacity: 0` and
+   revealed the control branch before its turn - the reveal state belongs on
+   .is-in and nowhere else. */
+.pbranch.is-control { border-left-style: dotted; }
 .pbranch.is-control.is-in { opacity: .85; }
 
 .pb-badge {

@@ -56,7 +56,7 @@
       b.setAttribute("aria-controls", "panel-" + index + "-" + d.key);
       b.tabIndex = -1;
       b.addEventListener("click", function () { select(d.key, true); });
-      b.addEventListener("keydown", function (ev) { onKey(ev, d.key); });
+      b.addEventListener("keydown", function (ev) { onKey(ev, d.key, index); });
       strip.appendChild(b);
       buttons[d.key] = b;
 
@@ -71,7 +71,10 @@
                   buttons: buttons, panels: panels });
   }
 
-  function onKey(ev, key) {
+  /* `from` is the index of the group the key was pressed in. Without it, focus
+     lands on the first group that has the destination key - which is always
+     group 0, because every placard carries every depth. */
+  function onKey(ev, key, from) {
     var order = DEPTHS.map(function (d) { return d.key; });
     var i = order.indexOf(key), next = null;
     if (ev.key === "ArrowRight" || ev.key === "ArrowDown") next = order[(i + 1) % order.length];
@@ -81,8 +84,9 @@
     if (!next) return;
     ev.preventDefault();
     select(next, true);
-    var g = groups.find(function (g) { return g.buttons[next]; });
-    if (g) g.buttons[next].focus();
+    var g = groups[from] && groups[from].buttons[next] ? groups[from]
+          : groups.find(function (g) { return g.buttons[next]; });
+    if (g && g.buttons[next]) g.buttons[next].focus();
   }
 
   /* One choice applies to the whole site: a reader who picks "For kids" wants

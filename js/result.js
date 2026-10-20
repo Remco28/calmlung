@@ -120,7 +120,11 @@
         }
         var v = at(data, upto);
         if (pts.length && pts[pts.length - 1][0] < upto) pts.push([upto, v]);
-        if (pts.length < 2) { o.path.setAttribute("d", ""); o.dot.setAttribute("opacity", 0); return; }
+        if (pts.length < 2) {
+          o.path.setAttribute("d", ""); o.dot.setAttribute("opacity", 0);
+          o.lab.setAttribute("opacity", 0);     /* or it survives the rewind */
+          return;
+        }
         o.path.setAttribute("d", pts.map(function (p, i) {
           return (i ? "L" : "M") + X(p[0]).toFixed(1) + "," + Y(p[1]).toFixed(1);
         }).join(" "));
@@ -180,13 +184,19 @@
         var v = at(d, Math.min(day, 10));
         stats[i].textContent = Math.round(v) + "%";
       });
-      var wt = at(WT_T, Math.min(day, 10)), wc = at(WT_C, Math.min(day, 7));
+      /* Past the last measurement, say which day it came from. The group is
+         gone by day 8 and there is no later weight; an unlabelled number here
+         reads as one. */
+      var LAST_C = WT_C[WT_C.length - 1][0];
+      var wt = at(WT_T, Math.min(day, 10)), wc = at(WT_C, Math.min(day, LAST_C));
+      var wcStale = day > LAST_C + .5;
       if (day < 4) note.textContent = "Both groups are losing a little weight.";
       else if (day < 7) note.textContent = "One group is dropping fast.";
       else if (day < 8.2) note.textContent = "The untrained mice are reaching the end point.";
       else note.textContent = "The trained mice have stopped losing weight — they have not regained it.";
             plate.querySelector("[data-wt]").textContent = wt ? wt.toFixed(0) + "%" : "—";
-      plate.querySelector("[data-wc]").textContent = wc ? wc.toFixed(0) + "%" : "—";
+      plate.querySelector("[data-wc]").textContent =
+        wc ? wc.toFixed(0) + "%" + (wcStale ? " on day " + LAST_C : "") : "—";
                   /* see setup.js: whole days only, or a focused slider never stops talking */
       var d = Math.round(day);
       if (rail && d !== paint.said) {
@@ -231,7 +241,7 @@
     else if ("IntersectionObserver" in window) {
       new IntersectionObserver(function (es) {
         es.forEach(function (e) { if (e.isIntersecting) start(); });
-      }, { threshold: .4 }).observe(plate);
+      }, { threshold: 0, rootMargin: "-20% 0px -20% 0px" }).observe(plate);
     } else start();
 
     function scrub(ev) {
