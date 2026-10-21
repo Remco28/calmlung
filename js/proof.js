@@ -38,12 +38,12 @@
 
     { y: 244, kind: "control", tone: GREY,
       cond: "An untrained mouse — macrophages replaced anyway",
-      why: "So the swap itself is not what kills.",
+      why: "So the swap itself did not kill them.",
       out: "No change", outTone: GREY,
       note: "A control, not part of the argument. It shows that swapping the cells does not by itself make a mouse sicker." },
 
     { y: 322, kind: "main", tone: TEAL,
-      cond: "Trained macrophages moved into an untrained mouse",
+      cond: "Trained macrophages into a mouse whose own were taken out",
       why: "So the cells carry it with them.",
       out: "Less weight loss", outTone: TEAL,
       tag: "at a milder flu dose",
