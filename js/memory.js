@@ -38,8 +38,15 @@
      locus on this plate is one the paper reports as MORE accessible, and closing
      the segment under Stat6 drew the opposite of the table beneath it. Loci live
      at segments 2, 5, 9 and 12, so the closed pair are 7 and 10. */
-  var NAIVE   = [.10,.08,.12,.10,.09,.13,.08,.11,.10,.12,.09,.08,.11,.10,.09];
-  var TRAINED = [.88,.82,.92,.80,.86,.90,.84,.14,.83,.89,.17,.81,.91,.85,.87];
+  /* The measurement is INCREASED ACCESSIBILITY - a fold-change - not a flip
+     from shut to open. These used to run .08-.13 against .80-.92, which drew
+     closed becoming open and said something the paper does not. They now run
+     packed-but-not-shut against looser-but-not-flung-wide, which keeps the
+     contrast a reader needs while matching what was actually measured. The
+     two exception segments sit BELOW the untrained state, because 310
+     stretches became less reachable, not merely less improved. */
+  var NAIVE   = [.30,.27,.33,.29,.28,.34,.27,.31,.29,.32,.28,.27,.31,.30,.28];
+  var TRAINED = [.76,.71,.79,.70,.74,.78,.73,.24,.72,.77,.26,.71,.78,.74,.75];
 
   var LOCI = [
     { seg: 2,  name: "Pparg",  access: "more open",  read: "being read more" },
